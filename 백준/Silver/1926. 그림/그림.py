@@ -24,7 +24,7 @@ max_area = 0 #가장 넓은 그림의 넓이
 for i in range(n) :
     for j in range(m) :
         if board[i][j] == 1 :
-            img_area = 1#그림의 넓이 초기화 
+            img_area = 1 #그림의 넓이 초기화 
             board[i][j] = 0
             dfs(i, j)
             img_cnt += 1 #그림의 개수 세기(덩어리) 
