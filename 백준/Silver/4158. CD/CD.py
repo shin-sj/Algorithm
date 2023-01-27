@@ -13,6 +13,7 @@ while True :
         mlist.append(int(input()))
         
     ## 1. bruteforce ## 
+    ''' input값이 매우 커서 완탐 불가능 -> 이분탐색이나 딕셔너리 사용 '''
     # cnt = 0
     # for nn in nlist :
     #     if nn in mlist :
