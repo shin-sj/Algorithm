@@ -1,62 +1,66 @@
-#벽 부수고 이동하기 4
 import sys
 from collections import deque
 input = sys.stdin.readline
-dx = [0,0,1,-1]
+dx = [0,0,-1,1]
 dy = [1,-1,0,0]
-def bfs(i, j) :
+def bfs(sx, sy) :
     dQ = deque()
-    dQ.append((i, j))
-    cnt = 1 #현재 위치도 카운트 1
-    visited[i][j] = 1 #시작위치 방문 표시***
-    while dQ :
+    dQ.append((sx,sy))
+    visited[sx][sy] = 1 #시작위치 방문 표시
+    cnt = 1 #시작위치 개수 세기 
+    while dQ : 
         x, y = dQ.popleft()
-        zeros[x][y] = group
+        zeros[x][y] = group #현재 그룹에 포함 
         for i in range(4) :
-            xx = x + dx[i]
-            yy = y + dy[i]
-            if xx < 0 or xx >= n or yy < 0 or yy >= m : 
-                continue
-            elif board[xx][yy] == 0 and visited[xx][yy] == 0:
-                visited[xx][yy] = 1 #방문체크
-                dQ.append((xx, yy))
-                cnt += 1 #0의 개수 카운트 
-    return cnt 
-
-def move_count(x, y) :
-    aSet = set()
-    #상하좌우 체크하면서 인접한 그룹 파악
-    for i in range(4) : 
-        xx = x + dx[i]
-        yy = y + dy[i]
+            xx = x+dx[i]
+            yy = y+dy[i]
+            if 0<=xx<n and 0<=yy<m :
+                if visited[xx][yy] :
+                    continue
+                #이동할 위치가 빈 곳이라면 
+                if board[xx][yy] == 0 : 
+                    dQ.append((xx, yy))
+                    visited[xx][yy] = 1
+                    cnt += 1
+    return cnt
+#이동할 수 있는 총 그룹의 개수를 세는 함수 
+def move_count(x, y) : 
+    data = set() #그룹 번호를 담기 위한 집합 데이터 생성(중복 제거를 위해 set사용)
+    for i in range(4) :
+        xx = x+dx[i]
+        yy = y+dy[i]
         if 0<=xx<n and 0<=yy<m :
             if zeros[xx][yy] != 0 :
-                aSet.add(zeros[xx][yy])
-    tmp = 1 #현재 위치 세기 
-    for a in aSet :
-        tmp += adict[a]
-        tmp %= 10
-    return tmp 
-    
+                data.add(zeros[xx][yy])
+    cnt = 1 #현재 x, y위치 세기
+    for c in data : 
+        #딕셔너리에 추가
+        cnt += info[c]
+        cnt %= 10
+    return cnt  #출력값 반환
+
+
 n, m = map(int, input().split())
 board = [list(map(int, input().rstrip())) for _ in range(n)]
-visited = [[0] * m for _ in range(n)] # 굳이 이게 필요한지??!! board로 커버 안되는가 체크 
-zeros = [[0] * m for _ in range(n)] # group명 배열 
-answer = [[0] * m  for _ in range(n)]
-group = 1
-adict = {}  # 그룹명 : 0의개수(=이동가능한영역)
+visited = [[0] * m for _ in range(n)]
+zeros = [[0] * m for _ in range(n)]
+answer = [[0] * m for _ in range(n)] #정답 배열 
+group = 1 # 1번 그룹 생성
+info = {} # (그룹명:개수)딕셔너리
 
-#1. 0(=이동할 수 있는 영역)의 개수를 그룹별로 세기 
 for i in range(n) :
     for j in range(m) :
-        if board[i][j] == 0 and visited[i][j] == 0:
-            adict[group] = bfs(i, j)
-            group += 1
-
-# 2. 1(=벽) 근처에 있는 그룹 체크 
+        if board[i][j] == 0 and visited[i][j] == 0 :
+            cnt = bfs(i, j)
+            info[group] = cnt #딕셔너리에 그룹명과 개수 추가 
+            group += 1 #다음 그룹 
+            
+#전체 데이터를 하나씩 살펴보며
 for i in range(n) :
     for j in range(m) :
-        if board[i][j] == 1 : #벽이면 -> board배열이 bfs이후에 또 필요함 -> visited를 사용해야 하는 이유임. (아예 방문표시를 -1로둬도가능함=겹치지 않도록  )
+        #벽이 있다면 
+        if board[i][j] :
             answer[i][j] = move_count(i, j)
+            
 for i in range(n) :
     print("".join(map(str, answer[i])))
