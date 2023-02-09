@@ -1,46 +1,40 @@
 import sys
 from collections import deque
-input = sys.stdin.readline
 
-A, B, N, M = map(int, input().split())
-#A, B - 스카이 콩콩의 힘 
-#N, M - 동규와 주미의 현재위치 
+def bfs(x):
+    # +1, -1, +a, -a, +b, -b, *a, *b칸 이동
+    dy = [1, -1, a, -a, b, -b, a, b]
+    queue = deque([x])
+    visited[x] = True
+    while queue:
 
-#동규가 주미에게 도달하기 위한 최소한의 이동 횟수는?
-visited = [-1] * 100001
+        # 현재 위치 확인
+        target = queue.popleft()
 
-dQ = deque()
-visited[N] = 0
-dQ.append(N) 
+        # 현재 위치에서 총 8가지 경우의 수를 bfs 탐색으로 수행
+        for i in range(8):
+            # 6가지 경우는 + 연산
+            if i < 6:
+                y = target + dy[i]
+                # 현재 위치와 이동하는 수를 더한 값이 돌다리 위에 있고 탐색하지 않았다면
+                # 큐에 추가하고 그때의 턴을 +1 해준다.
+                if 0 <= y <= 100000 and visited[y] == False:
+                    queue.append(y)
+                    visited[y] = True
+                    graph[y] = graph[target] + 1
+            # 나머지 2개의 경우는 배수이기 때문에 곱하기로 연산
+            else:
+                y = target * dy[i]
+                # 현재 위치와 이동하는 수를 곱한 값이 돌다리 위에 있고 탐색하지 않았다면
+                # 큐에 추가하고 그때의 턴을 +1 해준다.
+                if 0 <= y <= 100000 and visited[y] == False:
+                    queue.append(y)
+                    visited[y] = True
+                    graph[y] = graph[target] + 1
 
-while dQ :
-    now = dQ.popleft()
-    if now == M :
-        break
 
-    if 0<=now+1<100001 and visited[now+1] == -1 :
-        visited[now+1] = visited[now] + 1
-        dQ.append(now+1)
-    if 0<=now-1<100001 and visited[now-1] == -1 :
-        visited[now-1] = visited[now] + 1
-        dQ.append(now-1)
-    if 0<=now+A<100001 and visited[now+A] == -1 :
-        visited[now+A] = visited[now] + 1
-        dQ.append(now+A)
-    if 0<=now-A<100001 and visited[now-A] == -1 :
-            visited[now-A] = visited[now] + 1
-            dQ.append(now-A)
-    if 0<=now+B<100001 and visited[now+B] == -1 :
-        visited[now+B] = visited[now] + 1
-        dQ.append(now+B)
-    if 0<=now-B<100001 and visited[now-B] == -1 :
-        visited[now-B] = visited[now] + 1
-        dQ.append(now-B)   
-    if 0<=now*A<100001 and visited[now*A] == -1 :
-        visited[now*A] = visited[now] + 1
-        dQ.append(now*A)
-    if 0<=now*B<100001 and visited[now*B] == -1 :
-        visited[now*B] = visited[now] + 1
-        dQ.append(now*B)
-        
-print(visited[M])
+a, b, n, m = map(int, sys.stdin.readline().split())
+graph = [0 for _ in range(100001)]
+visited = [False for _ in range(100001)]
+bfs(n)
+print(graph[m])
