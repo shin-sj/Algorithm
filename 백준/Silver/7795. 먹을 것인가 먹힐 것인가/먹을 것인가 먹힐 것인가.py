@@ -7,21 +7,17 @@ for _ in range(tc) :
     n, m = map(int, input().split())
     alist = list(map(int, input().split()))
     blist = list(map(int, input().split()))
-    alist.sort()
-    blist.sort()
+    alist.sort(reverse=True)
+    blist.sort(reverse=True)
     ans = 0
+    aIdx = 0
+    bIdx = 0 
     
-    for a in alist :
-        lt = 0
-        rt = len(blist) - 1
-        result = -1 
-        while lt <= rt :
-            mid = (rt+lt) // 2
+    while aIdx < n and bIdx < m :
+        if alist[aIdx] > blist[bIdx] :
+            ans += m - bIdx 
+            aIdx += 1
+        else :
+            bIdx += 1
             
-            if blist[mid] < a : 
-                result = mid
-                lt = mid + 1
-            else :
-                rt = mid - 1
-        ans += result + 1
     print(ans)
