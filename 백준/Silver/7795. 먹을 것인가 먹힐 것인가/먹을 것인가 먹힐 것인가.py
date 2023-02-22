@@ -9,19 +9,19 @@ for _ in range(tc) :
     blist = list(map(int, input().split()))
     alist.sort()
     blist.sort()
-    cnt = 0
-
+    ans = 0
+    
     for a in alist :
         lt = 0
         rt = len(blist) - 1
-        result = -1
-        
+        result = -1 
         while lt <= rt :
-            mid = (rt+lt) // 2  #index
-            if blist[mid] < a :
-                result = mid 
+            mid = (rt+lt) // 2
+            
+            if blist[mid] < a : 
+                result = mid
                 lt = mid + 1
             else :
                 rt = mid - 1
-        cnt += result + 1
-    print(cnt)
+        ans += result + 1
+    print(ans)
