@@ -1,18 +1,17 @@
 import sys
 input = sys.stdin.readline
 
-n, m = map(int, input().split()) 
+n, m = map(int, input().split())
 alist = list(map(int, input().split()))
-#i~j의 합이 m이 되는 경우의 수 구하기 
-start = 0
-end = 0
-ans = 0
-while start <= end and end <= n :
-    if sum(alist[start:end]) == m :
-        ans += 1
-        start += 1
-    elif sum(alist[start:end]) < m :
-        end += 1
+lt, rt = 0, 0
+cnt = 0
+while lt <= rt and rt <= n :
+    asum = sum(alist[lt:rt])
+    if asum == m :
+        cnt += 1
+        lt += 1
+    elif asum < m :
+        rt += 1
     else :
-        start += 1
-print(ans)
+        lt += 1
+print(cnt)
