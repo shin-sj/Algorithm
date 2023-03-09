@@ -1,6 +1,6 @@
 # [level 5] 상품을 구매한 회원 비율 구하기 - 131534 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/131534) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/131534#qna) 
 
 ### 성능 요약
 
